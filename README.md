@@ -43,3 +43,17 @@ kubectl kustomize "https://github.com/ianunruh/shelly-exporter.git/deploy/basic?
 
 Refer to the [target overlay](deploy/target) to learn how to configure the
 targets for this exporter.
+
+## Security
+
+There are two security considerations to make when deploying this exporter.
+
+1. When using authentication, the exporter acts as an authenticated proxy to any
+   web server that is passed in the "target" param. This could result in the auth
+   credentials being exposed. This means the exporter should be locked down with
+   an ingress NetworkPolicy to prevent access to clients other than Prometheus.
+
+2. Any service monitors should have a namespace selector specified to prevent
+   unauthorized services from being used to configure Prometheus to scrape them.
+   The monitors provided in the [basic deployment](deploy/basic) are locked down
+   to the `monitoring` namespace, for example.

@@ -3,6 +3,9 @@ kind: ServiceMonitor
 metadata:
   name: shelly-exporter
 spec:
+  namespaceSelector:
+    matchNames:
+    - monitoring
   selector:
     matchLabels:
       app.kubernetes.io/name: shelly-exporter
