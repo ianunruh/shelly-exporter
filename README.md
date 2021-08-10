@@ -41,33 +41,5 @@ kubectl kustomize "https://github.com/ianunruh/shelly-exporter.git/deploy/basic?
     kubectl apply -n monitoring -f-
 ```
 
-Then create the necessary resources for configuring Prometheus. Note the label used on
-the service, which the service monitor is configured to select.
-
-```yaml
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: shelly-plug
-  labels:
-    app.kubernetes.io/name: shelly-exporter-target
-spec:
-  type: ClusterIP
-  clusterIP: None
-  ports:
-  - name: http
-    port: 80
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: shelly-plug
-subsets:
-- addresses:
-  - ip: 192.168.1.186
-  - ip: 192.168.1.188
-  ports:
-  - name: http
-    port: 80
-```
+Refer to the [target overlay](deploy/target) to learn how to configure the
+targets for this exporter.
