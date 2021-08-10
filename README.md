@@ -37,7 +37,7 @@ kubectl -n monitoring create secret generic shelly-exporter \
     --from-literal=SHELLY_USERNAME=${SHELLY_USERNAME} \
     --from-literal=SHELLY_PASSWORD=${SHELLY_PASSWORD}
 
-kubectl kustomize "https://github.com/ianunruh/shelly-exporter.git/deploy/basic?ref=v1.0.0" | \
+kubectl kustomize "https://github.com/ianunruh/shelly-exporter.git/deploy/basic?ref=v1.0.1" | \
     kubectl apply -n monitoring -f-
 ```
 
