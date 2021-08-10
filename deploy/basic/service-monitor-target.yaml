@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: shelly-exporter-target
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: shelly-exporter-target
+  endpoints:
+  - interval: 10s
+    port: http
+    path: /probe
+    relabelings:
+    - sourceLabels: [__address__]
+      targetLabel: __param_target
+      regex: ^(.+):\d+$
+    - sourceLabels: [__param_target]
+      targetLabel: instance
+    - targetLabel: __address__
+      replacement: shelly-exporter.monitoring.svc:9090

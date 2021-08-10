@@ -1,0 +1,47 @@
+# HELP shelly_api_status_latency_ms Request latency for the status API in milliseconds
+# TYPE shelly_api_status_latency_ms gauge
+shelly_api_status_latency_ms{device="E868E7F15CB5"} 31
+
+# HELP shelly_cloud_connected Whether the device is connected to Shelly Cloud
+# TYPE shelly_cloud_connected gauge
+shelly_cloud_connected{device="E868E7F15CB5"} 1
+
+# HELP shelly_cloud_enabled Whether the device has Shelly Cloud enabled
+# TYPE shelly_cloud_enabled gauge
+shelly_cloud_enabled{device="E868E7F15CB5"} 1
+
+# HELP shelly_filesystem_free_kb Amount of free filesystem space on device in kilobytes
+# TYPE shelly_filesystem_free_kb gauge
+shelly_filesystem_free_kb{device="E868E7F15CB5"} 165158
+
+# HELP shelly_filesystem_total_kb Amount of total filesystem space on device in kilobytes
+# TYPE shelly_filesystem_total_kb gauge
+shelly_filesystem_total_kb{device="E868E7F15CB5"} 233681
+
+# HELP shelly_memory_free_kb Amount of free memory on device in kilobytes
+# TYPE shelly_memory_free_kb gauge
+shelly_memory_free_kb{device="E868E7F15CB5"} 39696
+
+# HELP shelly_memory_total_kb Amount of total memory on device in kilobytes
+# TYPE shelly_memory_total_kb gauge
+shelly_memory_total_kb{device="E868E7F15CB5"} 51352
+
+# HELP shelly_meter_power_watts Current real AC power being drawn, in Watts
+# TYPE shelly_meter_power_watts gauge
+shelly_meter_power_watts{device="E868E7F15CB5",meter="0"} 240.15
+
+# HELP shelly_mqtt_connected Whether the device is connected to MQTT
+# TYPE shelly_mqtt_connected gauge
+shelly_mqtt_connected{device="E868E7F15CB5"} 0
+
+# HELP shelly_relay_on Whether the channel is turned ON or OFF
+# TYPE shelly_relay_on gauge
+shelly_relay_on{device="E868E7F15CB5",relay="0"} 1
+
+# HELP shelly_update_available Whether the device has a firmware update available
+# TYPE shelly_update_available gauge
+shelly_update_available{device="E868E7F15CB5"} 0
+
+# HELP shelly_uptime_seconds Uptime of the device in seconds
+# TYPE shelly_uptime_seconds gauge
+shelly_uptime_seconds{device="E868E7F15CB5"} 64343

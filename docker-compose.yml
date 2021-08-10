@@ -1,0 +1,9 @@
+version: "3.1"
+services:
+  exporter:
+    build: .
+    environment:
+    - SHELLY_USERNAME
+    - SHELLY_PASSWORD
+    ports:
+    - 9090:9090

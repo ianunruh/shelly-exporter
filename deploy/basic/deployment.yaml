@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shelly-exporter
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        image: ghcr.io/ianunruh/shelly-exporter:v1.0.0
+        envFrom:
+        - secretRef:
+            name: shelly-exporter
+        ports:
+        - name: metrics
+          containerPort: 9090
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
