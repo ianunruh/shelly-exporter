@@ -5,11 +5,13 @@ type Status struct {
 
 	Cloud CloudStatus
 	MQTT  MQTTStatus
+	Bat   BatteryStatus
 
 	HasUpdate bool `json:"has_update"`
 
-	Meters []Meter
-	Relays []Relay
+	Meters      []Meter
+	Relays      []Relay
+	Thermostats []Thermostats
 
 	RAMTotal int `json:"ram_total"`
 	RAMFree  int `json:"ram_free"`
@@ -33,4 +35,23 @@ type CloudStatus struct {
 
 type MQTTStatus struct {
 	Connected bool
+}
+
+type BatteryStatus struct {
+	Value int
+}
+
+type Thermostats struct {
+	ThermostatPosition float64 `json:"pos"`
+
+	Target_t struct {
+		TargetEnabled bool    `json:"enabled"`
+		TargetValue   float64 `json:"value"`
+		TargetUnit    string  `json:"units"`
+	}
+
+	Tmp struct {
+		TemperatureValue float64 `json:"value"`
+		TemperatureUnit  string  `json:"units"`
+	}
 }
