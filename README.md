@@ -21,9 +21,9 @@ Tested with the Shelly Plug US.
 export SHELLY_USERNAME="admin"
 export SHELLY_PASSWORD="changeme"
 
-docker compose up -d --build
-docker compose ps
-docker compose logs exporter
+docker-compose up -d --build
+docker-compose ps
+docker-compose logs exporter
 
 curl -s "http://localhost:9090/probe?target=192.168.1.x"
 ```
