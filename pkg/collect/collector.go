@@ -63,6 +63,26 @@ func NewCollector(client shelly.Client, log *zap.Logger) *Collector {
 			"Request latency for the status API in milliseconds",
 			[]string{"device"}, nil,
 		),
+		TemperatureValue: prometheus.NewDesc("shelly_temp",
+			"Current temperature",
+			[]string{"device", "unit"}, nil,
+		),
+		ThermostatPosition: prometheus.NewDesc("shelly_thermostat_pos",
+			"Indicate to what percentage the thermostat is open",
+			[]string{"device"}, nil,
+		),
+		TargetTemperature: prometheus.NewDesc("shelly_temp_target",
+			"Show the target temperature",
+			[]string{"device", "unit"}, nil,
+		),
+		TargetEnabled: prometheus.NewDesc("shelly_temp_target_enabled",
+			"Whether the target temperature is set",
+			[]string{"device"}, nil,
+		),
+		BatteryStatus: prometheus.NewDesc("shelly_bat",
+			"Show the current battery status in percentage",
+			[]string{"device"}, nil,
+		),
 	}
 }
 
@@ -70,18 +90,23 @@ type Collector struct {
 	Client shelly.Client
 	Log    *zap.Logger
 
-	MeterPower      *prometheus.Desc
-	RelayOn         *prometheus.Desc
-	MemoryFree      *prometheus.Desc
-	MemoryTotal     *prometheus.Desc
-	FilesystemFree  *prometheus.Desc
-	FilesystemTotal *prometheus.Desc
-	Uptime          *prometheus.Desc
-	HasUpdate       *prometheus.Desc
-	CloudConnected  *prometheus.Desc
-	CloudEnabled    *prometheus.Desc
-	MQTTConnected   *prometheus.Desc
-	Latency         *prometheus.Desc
+	MeterPower         *prometheus.Desc
+	RelayOn            *prometheus.Desc
+	MemoryFree         *prometheus.Desc
+	MemoryTotal        *prometheus.Desc
+	FilesystemFree     *prometheus.Desc
+	FilesystemTotal    *prometheus.Desc
+	Uptime             *prometheus.Desc
+	HasUpdate          *prometheus.Desc
+	CloudConnected     *prometheus.Desc
+	CloudEnabled       *prometheus.Desc
+	MQTTConnected      *prometheus.Desc
+	Latency            *prometheus.Desc
+	TemperatureValue   *prometheus.Desc
+	ThermostatPosition *prometheus.Desc
+	TargetTemperature  *prometheus.Desc
+	TargetEnabled      *prometheus.Desc
+	BatteryStatus      *prometheus.Desc
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
@@ -97,6 +122,11 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.CloudEnabled
 	ch <- c.MQTTConnected
 	ch <- c.Latency
+	ch <- c.TemperatureValue
+	ch <- c.ThermostatPosition
+	ch <- c.TargetTemperature
+	ch <- c.TargetEnabled
+	ch <- c.BatteryStatus
 }
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
@@ -135,6 +165,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		status.MAC)
 	ch <- prometheus.MustNewConstMetric(c.MQTTConnected, prometheus.GaugeValue, float64FromBool(status.MQTT.Connected),
 		status.MAC)
+	ch <- prometheus.MustNewConstMetric(c.BatteryStatus, prometheus.GaugeValue, float64(status.Bat.Value), status.MAC)
 
 	for i, meter := range status.Meters {
 		meterID := strconv.Itoa(i)
@@ -146,6 +177,14 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		relayID := strconv.Itoa(i)
 		ch <- prometheus.MustNewConstMetric(c.RelayOn, prometheus.GaugeValue, float64FromBool(relay.IsOn),
 			status.MAC, relayID)
+	}
+
+	for _, thermostats := range status.Thermostats {
+		//temperatureID := strconv.Itoa(i)
+		ch <- prometheus.MustNewConstMetric(c.TemperatureValue, prometheus.GaugeValue, thermostats.Tmp.TemperatureValue, status.MAC, thermostats.Tmp.TemperatureUnit)
+		ch <- prometheus.MustNewConstMetric(c.ThermostatPosition, prometheus.GaugeValue, thermostats.ThermostatPosition, status.MAC)
+		ch <- prometheus.MustNewConstMetric(c.TargetTemperature, prometheus.GaugeValue, thermostats.Target_t.TargetValue, status.MAC, thermostats.Target_t.TargetUnit)
+		ch <- prometheus.MustNewConstMetric(c.TargetEnabled, prometheus.GaugeValue, float64FromBool(thermostats.Target_t.TargetEnabled), status.MAC)
 	}
 }
 
