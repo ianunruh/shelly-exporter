@@ -19,6 +19,10 @@ func NewCollector(client shelly.Client, log *zap.Logger) *Collector {
 			"Current real AC power being drawn, in Watts",
 			[]string{"device", "meter"}, nil,
 		),
+		TotalWattMinutes: prometheus.NewDesc("shelly_meter_total_wattminutes",
+			"Total energy consumed by the attached electrical appliance in Watt-minute",
+			[]string{"device", "meter"}, nil,
+		),
 		RelayOn: prometheus.NewDesc("shelly_relay_on",
 			"Whether the channel is turned ON or OFF",
 			[]string{"device", "relay"}, nil,
@@ -107,6 +111,7 @@ type Collector struct {
 	TargetTemperature  *prometheus.Desc
 	TargetEnabled      *prometheus.Desc
 	BatteryStatus      *prometheus.Desc
+	TotalWattMinutes   *prometheus.Desc
 }
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
@@ -170,6 +175,8 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	for i, meter := range status.Meters {
 		meterID := strconv.Itoa(i)
 		ch <- prometheus.MustNewConstMetric(c.MeterPower, prometheus.GaugeValue, meter.Power,
+			status.MAC, meterID)
+		ch <- prometheus.MustNewConstMetric(c.TotalWattMinutes, prometheus.CounterValue, meter.Total,
 			status.MAC, meterID)
 	}
 

@@ -22,6 +22,7 @@ type Status struct {
 
 type Meter struct {
 	Power float64
+	Total float64
 }
 
 type Relay struct {
